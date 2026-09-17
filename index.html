@@ -138,7 +138,7 @@
 </head>
 <body>
 
-<div id="loadingOverlay">جاري تأكيد الحجز وحفظه في النظام السحابي... ⏳</div>
+<div id="loadingOverlay">جاري فحص المواعيد المتاحة وتأكيد الحجز سحابياً... ⏳</div>
 
 <div class="container">
     <div class="clinic-header">
@@ -183,7 +183,7 @@
         <input type="text" id="paymentRef" placeholder="اكتب رقم العملية لتأكيد الحجز أوتوماتيك">
     </div>
 
-    <button class="action-btn" onclick="autoBookAppointment()">احصل على ميعادك الذكي</button>
+    <button class="action-btn" onclick="fetchAndBookAppointment()">احصل على ميعادك الذكي</button>
 
     <div id="summary"></div>
 </div>
@@ -206,7 +206,8 @@
         return `${formattedH}:${formattedM} ${period}`;
     };
 
-    function autoBookAppointment() {
+    // الدالة تجلب الحجوزات الحالية من جوجل شيت أولاً لتوزيع الأوقات صح وبدقة من أول اليوم
+    function fetchAndBookAppointment() {
         const name = document.getElementById('patientName').value.trim();
         const phone = document.getElementById('patientPhone').value.trim();
         const select = document.getElementById('serviceSelect');
@@ -225,117 +226,129 @@
             return;
         }
 
-        const duration = parseInt(select.options[select.selectedIndex].getAttribute('data-duration'));
-        const price = parseInt(select.options[select.selectedIndex].getAttribute('data-price'));
-        const deposit = price * 0.20; 
-
-        // لجلب الحجوزات الحالية من التخزين المؤقت أو سحبها لتوليد الميعاد
-        let existingBookings = JSON.parse(localStorage.getItem('pdz_bookings')) || [];
-        const dayBookings = existingBookings.filter(b => b.date === date).sort((a, b) => a.startMin - b.startMin);
-
-        const CLINIC_START = 14 * 60; 
-        const CLINIC_END = 22 * 60;   
-        const BUFFER = 10;            
-
-        let assignedStart = -1;
-        let assignedEnd = -1;
-
-        if (dayBookings.length === 0) {
-            assignedStart = CLINIC_START;
-            assignedEnd = CLINIC_START + duration;
-        } else {
-            let firstBooking = dayBookings[0];
-            if (firstBooking.startMin - CLINIC_START >= duration) {
-                assignedStart = CLINIC_START;
-                assignedEnd = CLINIC_START + duration;
-            } else {
-                for (let i = 0; i < dayBookings.length - 1; i++) {
-                    let currentEndWithBuffer = dayBookings[i].endMin + BUFFER;
-                    let nextStart = dayBookings[i + 1].startMin;
-                    
-                    if (nextStart - currentEndWithBuffer >= duration) {
-                        assignedStart = currentEndWithBuffer;
-                        assignedEnd = assignedStart + duration;
-                        break;
-                    }
-                }
-                if (assignedStart === -1) {
-                    let lastBooking = dayBookings[dayBookings.length - 1];
-                    let potentialStart = lastBooking.endMin + BUFFER;
-                    if (potentialStart + duration <= CLINIC_END) {
-                        assignedStart = potentialStart;
-                        assignedEnd = assignedStart + duration;
-                    }
-                }
-            }
-        }
-
-        if (assignedStart === -1 || assignedEnd > CLINIC_END) {
-            alert('عذراً، عيادة هذا اليوم مكتملة بالكامل، برجاء اختيار يوم آخر.');
-            return;
-        }
-
-        const assignedTimeStr = formatTimeMinutes(assignedStart);
-        const bookingCode = 'PDZ-' + Math.floor(1000 + Math.random() * 9000);
-        const isConfirmed = paymentRef.length > 0;
-
-        const newBooking = {
-            id: bookingCode,
-            name: name,
-            phone: phone,
-            service: service,
-            price: price,
-            date: date,
-            startMin: assignedStart,
-            endMin: assignedEnd,
-            time: assignedTimeStr,
-            deposit: deposit,
-            paymentRef: paymentRef ? paymentRef : 'لم يُسجل بعد',
-            status: isConfirmed ? 'confirmed' : 'pending',
-            medicalNotes: ''
-        };
-
         document.getElementById('loadingOverlay').style.display = 'block';
 
-        fetch(CLOUD_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(newBooking)
-        })
-        .then(() => {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            existingBookings.push(newBooking);
-            localStorage.setItem('pdz_bookings', JSON.stringify(existingBookings));
+        // نسحب الحجوزات من السيرفر لنضمن الحساب السليم للمواعيد المتاحة
+        fetch(CLOUD_SCRIPT_URL)
+            .then(res => res.json())
+            .then(allBookings => {
+                const duration = parseInt(select.options[select.selectedIndex].getAttribute('data-duration'));
+                const price = parseInt(select.options[select.selectedIndex].getAttribute('data-price'));
+                const deposit = price * 0.20; 
 
-            const queueNumber = dayBookings.length + 1;
+                // تصفية حجوزات اليوم المحدد فقط وترتيبها تصاعدياً من أول اليوم
+                const dayBookings = allBookings
+                    .filter(b => b.date === date)
+                    .sort((a, b) => (a.startMin || 0) - (b.startMin || 0));
 
-            const summaryDiv = document.getElementById('summary');
-            summaryDiv.style.display = 'block';
-            summaryDiv.innerHTML = `
-                <div class="printable-receipt">
-                    <div style="text-align: center; border-bottom: 2px solid #e0f2f1; padding-bottom: 10px; margin-bottom: 12px;">
-                        <h2 style="color: #004d40; margin: 0 0 5px 0;">Peter Dental Zone</h2>
-                        <p style="color: #00897b; margin: 0; font-size: 13px; font-weight: bold;">إيصال حجز ميعاد رسمي (سحابي) ✨</p>
-                    </div>
-                    <p><b>كود الحجز:</b> <span style="color: var(--primary); font-size: 18px; font-weight: bold;">#${bookingCode}</span></p>
-                    <p><b>المريض:</b> ${name} (${phone})</p>
-                    <p><b>الخدمة:</b> ${service} (${price} جنيه)</p>
-                    <p><b>تاريخ الحجز:</b> ${date}</p>
-                    <p><b>ميعاد البدء:</b> <span style="color: var(--danger); font-weight: bold; font-size: 17px;">${assignedTimeStr}</span></p>
-                    <p><b>العربون المطلوب (20%):</b> <span style="color: #d35400; font-weight: bold; font-size: 18px;">${deposit} جنيه</span></p>
-                    <p style="color: #c0392b; font-weight: bold; font-size: 13px; border-top: 1px dashed #b2dfdb; padding-top: 8px; margin-top: 10px;">⚠️ تنبيه هام: تم حفظ الحجز سحابياً بنجاح. برجاء أخذ لقطة شاشة (Screenshot) لهذا الإيصال والحضور قبل الميعاد بـ 10 دقائق.</p>
-                </div>
-            `;
+                const CLINIC_START = 14 * 60; // الساعة 2 ظهراً
+                const CLINIC_END = 22 * 60;   // الساعة 10 مساءً
+                const BUFFER = 10;            // 10 دقائق فاصل بين كل مريض
 
-            document.getElementById('patientName').value = '';
-            document.getElementById('patientPhone').value = '';
-            document.getElementById('paymentRef').value = '';
-        })
-        .catch(err => {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            alert('حدث خطأ أثناء الاتصال بالسحابة، برجاء المحاولة مرة أخرى.');
-            console.error(err);
-        });
+                let assignedStart = -1;
+                let assignedEnd = -1;
+
+                if (dayBookings.length === 0) {
+                    // لو اليوم فاضي تماماً، يبدأ من أول ميعاد (الساعة 2 ظهراً) بالظبط
+                    assignedStart = CLINIC_START;
+                    assignedEnd = CLINIC_START + duration;
+                } else {
+                    // نشوف لو فيه مساحة فاضية قبل أول مريض في اليوم
+                    if ((dayBookings[0].startMin || CLINIC_START) - CLINIC_START >= duration) {
+                        assignedStart = CLINIC_START;
+                        assignedEnd = CLINIC_START + duration;
+                    } else {
+                        // ندور بين الحجوزات على أول فجوة (فاصل زمني) تكفي الخدمة المطلوبة
+                        for (let i = 0; i < dayBookings.length - 1; i++) {
+                            let currentEndWithBuffer = (dayBookings[i].endMin || dayBookings[i].startMin + 30) + BUFFER;
+                            let nextStart = dayBookings[i + 1].startMin || currentEndWithBuffer;
+                            
+                            if (nextStart - currentEndWithBuffer >= duration) {
+                                assignedStart = currentEndWithBuffer;
+                                assignedEnd = assignedStart + duration;
+                                break;
+                            }
+                        }
+                        // لو ملقاش فجوة في النص، يحط المريض في آخر اليوم بعد آخر حجز
+                        if (assignedStart === -1) {
+                            let lastBooking = dayBookings[dayBookings.length - 1];
+                            let potentialStart = (lastBooking.endMin || lastBooking.startMin + 30) + BUFFER;
+                            if (potentialStart + duration <= CLINIC_END) {
+                                assignedStart = potentialStart;
+                                assignedEnd = assignedStart + duration;
+                            }
+                        }
+                    }
+                }
+
+                if (assignedStart === -1 || assignedEnd > CLINIC_END) {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    alert('عذراً، مواعيد عيادة هذا اليوم مكتملة تماماً، برجاء اختيار يوم آخر.');
+                    return;
+                }
+
+                const assignedTimeStr = formatTimeMinutes(assignedStart);
+                const bookingCode = 'PDZ-' + Math.floor(1000 + Math.random() * 9000);
+                const isConfirmed = paymentRef.length > 0;
+
+                const newBooking = {
+                    id: bookingCode,
+                    name: name,
+                    phone: phone,
+                    service: service,
+                    price: price,
+                    date: date,
+                    startMin: assignedStart,
+                    endMin: assignedEnd,
+                    time: assignedTimeStr,
+                    deposit: deposit,
+                    paymentRef: paymentRef ? paymentRef : 'لم يُسجل بعد',
+                    status: isConfirmed ? 'confirmed' : 'pending',
+                    medicalNotes: ''
+                };
+
+                // إرسال الحجز الفعلي للسيرفر السحابي
+                fetch(CLOUD_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(newBooking)
+                })
+                .then(() => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    
+                    const summaryDiv = document.getElementById('summary');
+                    summaryDiv.style.display = 'block';
+                    summaryDiv.innerHTML = `
+                        <div class="printable-receipt">
+                            <div style="text-align: center; border-bottom: 2px solid #e0f2f1; padding-bottom: 10px; margin-bottom: 12px;">
+                                <h2 style="color: #004d40; margin: 0 0 5px 0;">Peter Dental Zone</h2>
+                                <p style="color: #00897b; margin: 0; font-size: 13px; font-weight: bold;">إيصال حجز ميعاد رسمي (سحابي) ✨</p>
+                            </div>
+                            <p><b>كود الحجز:</b> <span style="color: var(--primary); font-size: 18px; font-weight: bold;">#${bookingCode}</span></p>
+                            <p><b>المريض:</b> ${name} (${phone})</p>
+                            <p><b>الخدمة:</b> ${service} (${price} جنيه)</p>
+                            <p><b>تاريخ الحجز:</b> ${date}</p>
+                            <p><b>ميعاد البدء:</b> <span style="color: var(--danger); font-weight: bold; font-size: 17px;">${assignedTimeStr}</span></p>
+                            <p><b>العربون المطلوب (20%):</b> <span style="color: #d35400; font-weight: bold; font-size: 18px;">${deposit} جنيه</span></p>
+                            <p style="color: #c0392b; font-weight: bold; font-size: 13px; border-top: 1px dashed #b2dfdb; padding-top: 8px; margin-top: 10px;">⚠️ تنبيه هام: تم حفظ الحجز سحابياً بنجاح. برجاء أخذ لقطة شاشة (Screenshot) لهذا الإيصال والحضور قبل الميعاد بـ 10 دقائق.</p>
+                        </div>
+                    `;
+
+                    document.getElementById('patientName').value = '';
+                    document.getElementById('patientPhone').value = '';
+                    document.getElementById('paymentRef').value = '';
+                })
+                .catch(err => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    alert('حدث خطأ أثناء حفظ الحجز في السحابة.');
+                    console.error(err);
+                });
+            })
+            .catch(err => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                alert('تعذر جلب الجدول الزمني من السحابة، تأكد من الاتصال.');
+                console.error(err);
+            });
     }
 </script>
 
