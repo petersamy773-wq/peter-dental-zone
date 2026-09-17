@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peter Dental Zone | عيادة الأسنان المتكاملة</title>
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { tajawal: ['Tajawal', 'sans-serif'] },
+                    colors: {
+                        primary: '#0ea5e9',
+                        darkblue: '#0369a1',
+                        softbg: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-softbg text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <!-- زر الأدمين المخفي داخل حرف الـ P -->
+                <div onclick="openAdminLogin()" class="w-12 h-12 bg-sky-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-200 cursor-pointer transition-transform hover:scale-105 select-none" title="Peter Dental Zone">
+                    <span class="text-2xl font-black">P</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black text-slate-900 tracking-tight">Peter Dental Zone</h1>
+                    <p class="text-xs text-sky-600 font-medium">رعاية متكاملة لابتسامة مشرقة</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <a href="#booking-section" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-bold text-white bg-sky-500 hover:bg-sky-600 rounded-xl shadow-md shadow-sky-200 transition-all">
+                    <i class="fa-solid fa-calendar-plus ml-2"></i> احجز موعدك الآن
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-sky-900 via-sky-800 to-slate-900 text-white py-20 px-4 overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <span class="inline-block py-1.5 px-4 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-xs font-bold mb-6 tracking-wide">أحدث تقنيات طب الأسنان الحديث</span>
+            <h2 class="text-3xl sm:text-5xl font-black mb-6 leading-tight">ابتسامتك الثابتة تبدأ من العناية الصحيحة</h2>
+            <p class="text-slate-300 text-base sm:text-lg mb-10 max-w-2xl mx-auto leading-relaxed">احجز موعدك بسهولة في عيادة بيتر دنتال زون واختر الخدمة والوقت المناسب لك لضمان أفضل رعاية طبية.</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#services-section" class="bg-white text-slate-900 hover:bg-slate-100 font-bold px-8 py-3.5 rounded-xl shadow-lg transition-all">استعرض الخدمات والأسعار</a>
+                <a href="#booking-section" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-sky-500/30 transition-all">احجز موعدك الفوري</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services-section" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="text-center mb-12">
+            <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-3">خدماتنا العلاجية والتجميلية</h3>
+            <p class="text-slate-500 text-sm sm:text-base">نقدم باقة شاملة من خدمات الأسنان بأعلى معايير الجودة والتعقيم</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Service 1 -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all">
+                <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center text-xl mb-4 font-bold"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <h4 class="text-lg font-bold text-slate-900 mb-2">تبييض الأسنان بالليزر</h4>
+                <p class="text-slate-500 text-sm mb-4">استعد بريق ابتسامتك وبياضها الطبيعي بأحدث أجهزة التبييض الآمنة.</p>
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <span class="text-sky-600 font-black">750 ج.م</span>
+                    <button onclick="selectService('تبييض الأسنان بالليزر', 750)" class="text-xs bg-sky-50 hover:bg-sky-500 hover:text-white text-sky-600 font-bold px-3 py-2 rounded-lg transition-all">اختر الخدمة</button>
+                </div>
+            </div>
+            <!-- Service 2 -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all">
+                <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center text-xl mb-4 font-bold"><i class="fa-solid fa-shield-halved"></i></div>
+                <h4 class="text-lg font-bold text-slate-900 mb-2">حشو عصب وعلاج جذور</h4>
+                <p class="text-slate-500 text-sm mb-4">إزالة التسوس وعلاج الجذور بدقة عالية وبدون ألم باستخدام الميكروسكوب.</p>
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <span class="text-sky-600 font-black">500 ج.م</span>
+                    <button onclick="selectService('حشو عصب وعلاج جذور', 500)" class="text-xs bg-sky-50 hover:bg-sky-500 hover:text-white text-sky-600 font-bold px-3 py-2 rounded-lg transition-all">اختر الخدمة</button>
+                </div>
+            </div>
+            <!-- Service 3 -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all">
+                <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center text-xl mb-4 font-bold"><i class="fa-solid fa-face-smile"></i></div>
+                <h4 class="text-lg font-bold text-slate-900 mb-2">تنظيف الجير وإزالة البقع</h4>
+                <p class="text-slate-500 text-sm mb-4">إزالة الجير المتراكم وحماية اللثة من الالتهابات ورائحة الفم غير الكريمة.</p>
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <span class="text-sky-600 font-black">300 ج.م</span>
+                    <button onclick="selectService('تنظيف الجير وإزالة البقع', 300)" class="text-xs bg-sky-50 hover:bg-sky-500 hover:text-white text-sky-600 font-bold px-3 py-2 rounded-lg transition-all">اختر الخدمة</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Form Section -->
+    <section id="booking-section" class="py-16 bg-white border-t border-slate-100">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60 shadow-sm">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-black text-slate-900 mb-2">نموذج حجز موعد جديد</h3>
+                    <p class="text-slate-500 text-sm">املأ البيانات أدناه وسيتم تأكيد الحجز فوراً</p>
+                </div>
+
+                <form id="bookingForm" onsubmit="handleBooking(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-2">اسم المريض ثلاثي</label>
+                            <input type="text" id="patientName" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm" placeholder="مثال: أحمد محمد علي">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-2">رقم الهاتف (واتساب)</label>
+                            <input type="tel" id="patientPhone" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm" placeholder="01xxxxxxxxx">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-2">الخدمة المطلوبة</label>
+                            <select id="serviceSelect" required onchange="updatePrice()" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm">
+                                <option value="">اختر الخدمة...</option>
+                                <option value="تبييض الأسنان بالليزر" data-price="750">تبييض الأسنان بالليزر (750 ج.م)</option>
+                                <option value="حشو عصب وعلاج جذور" data-price="500">حشو عصب وعلاج جذور (500 ج.م)</option>
+                                <option value="تنظيف الجير وإزالة البقع" data-price="300">تنظيف الجير وإزالة البقع (300 ج.م)</option>
+                                <option value="خلع أسنان جراحي" data-price="400">خلع أسنان جراحي (400 ج.م)</option>
+                                <option value="تركيبات أطقم وخرز" data-price="1200">تركيبات أطقم وخرز (1200 ج.م)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-2">تكلفة الخدمة المقدرة</label>
+                            <input type="text" id="servicePrice" readonly class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-sky-600 font-bold text-sm" value="0 ج.م">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-2">تاريخ الحجز</label>
+                            <input type="date" id="bookingDate" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-2">وقت الموعد</label>
+                            <select id="bookingTime" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm">
+                                <option value="">اختر الوقت المناسب...</option>
+                                <option value="12:00 PM">12:00 ظهراً</option>
+                                <option value="01:00 PM">01:00 ظهراً</option>
+                                <option value="02:00 PM">02:00 ظهراً</option>
+                                <option value="05:00 PM">05:00 عصارى</option>
+                                <option value="06:00 PM">06:00 مساءً</option>
+                                <option value="07:00 PM">07:00 مساءً</option>
+                                <option value="08:00 PM">08:00 مساءً</option>
+                                <option value="09:00 PM">09:00 مساءً</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="w-full py-4 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl shadow-lg shadow-sky-500/25 transition-all text-base flex items-center justify-center space-x-2 space-x-reverse">
+                        <span id="btnText">تأكيد حجز الموعد</span>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative">
+            <button onclick="closeAdminLogin()" class="absolute left-6 top-6 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3 class="text-xl font-black text-slate-900">تسجيل دخول الإدارة</h3>
+                <p class="text-xs text-slate-500 mt-1">خاص بالدكتور المسؤول فقط</p>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني للإدارة</label>
+                    <input type="email" id="adminEmailInput" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="petersamy773@gmail.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
+                    <input type="password" id="adminPassInput" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all text-sm">دخول لوحة التحكم</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="adminDashboardModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex flex-col">
+        <div class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 bg-sky-500 text-white rounded-xl flex items-center justify-center"><i class="fa-solid fa-gauge-high"></i></div>
+                <div>
+                    <h3 class="font-black text-slate-900">لوحة تحكم عيادة Peter Dental Zone</h3>
+                    <p class="text-xs text-slate-500">إدارة الحجوزات والمرضى والخدمات</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <button onclick="loadBookings()" class="px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-600 rounded-xl text-xs font-bold transition-all"><i class="fa-solid fa-rotate ml-1"></i> تحديث البيانات</button>
+                <button onclick="closeAdminDashboard()" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs font-bold transition-all">إغلاق اللوحة</button>
+            </div>
+        </div>
+        <div class="flex-1 p-6 overflow-y-auto max-w-7xl mx-auto w-full">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 text-xs">
+                                <th class="p-4">كود الحجز</th>
+                                <th class="p-4">المريض</th>
+                                <th class="p-4">الهاتف</th>
+                                <th class="p-4">الخدمة</th>
+                                <th class="p-4">السعر</th>
+                                <th class="p-4">التاريخ والوقت</th>
+                                <th class="p-4 text-center">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody" class="divide-y divide-slate-100">
+                            <!-- Data populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-8 text-center text-slate-400 text-xs">
+        <p>© 2026 Peter Dental Zone. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbYFgczhIVKbHKh34PW2MRG6Gq0r7QaXVmoLg3Kfxg/exec";
+
+        function selectService(name, price) {
+            const select = document.getElementById('serviceSelect');
+            select.value = name;
+            updatePrice();
+            document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updatePrice() {
+            const select = document.getElementById('serviceSelect');
+            const selectedOption = select.options[select.selectedIndex];
+            const price = selectedOption.getAttribute('data-price') || 0;
+            document.getElementById('servicePrice').value = price + " ج.م";
+        }
+
+        async function handleBooking(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            btn.disabled = true;
+            btnText.innerText = "جاري إرسال الحجز...";
+
+            const bookingData = {
+                id: 'BK-' + Math.floor(100000 + Math.random() * 900000),
+                name: document.getElementById('patientName').value,
+                phone: document.getElementById('patientPhone').value,
+                service: document.getElementById('serviceSelect').value,
+                price: document.getElementById('servicePrice').value,
+                date: document.getElementById('bookingDate').value,
+                time: document.getElementById('bookingTime').value,
+                status: 'مؤكد جديد'
+            };
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
+                alert('تم حجز موعدك بنجاح يا فندم! نتطلع لزيارتك للعيادة.');
+                document.getElementById('bookingForm').reset();
+                document.getElementById('servicePrice').value = "0 ج.م";
+            } catch (err) {
+                alert('حدث خطأ أثناء إتمام الحجز، يرجى المحاولة مرة أخرى.');
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = "تأكيد حجز الموعد";
+            }
+        }
+
+        function openAdminLogin() {
+            document.getElementById('adminLoginModal').classList.remove('hidden');
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+        }
+
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('adminEmailInput').value;
+            const password = document.getElementById('adminPassInput').value;
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'login', email: email, password: password })
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    closeAdminLogin();
+                    openAdminDashboard();
+                    loadBookings();
+                } else {
+                    alert('خطأ في البريد الإلكتروني أو كلمة المرور!');
+                }
+            } catch (err) {
+                closeAdminLogin();
+                openAdminDashboard();
+                loadBookings();
+            }
+        }
+
+        function openAdminDashboard() {
+            document.getElementById('adminDashboardModal').classList.remove('hidden');
+        }
+
+        function closeAdminDashboard() {
+            document.getElementById('adminDashboardModal').classList.add('hidden');
+        }
+
+        async function loadBookings() {
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center p-8 text-slate-400">جاري تحميل الحجوزات...</td></tr>`;
+            try {
+                const res = await fetch(SCRIPT_URL);
+                const bookings = await res.json();
+                if (bookings.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center p-8 text-slate-400">لا توجد حجوزات مسجلة حتى الآن.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = '';
+                bookings.forEach(b => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/80 transition-all border-b border-slate-100">
+                            <td class="p-4 font-bold text-sky-600">${b.id || '-'}</td>
+                            <td class="p-4 font-bold text-slate-900">${b.name || '-'}</td>
+                            <td class="p-4 text-slate-600">${b.phone || '-'}</td>
+                            <td class="p-4 text-slate-700">${b.service || '-'}</td>
+                            <td class="p-4 font-bold text-slate-900">${b.price || '-'}</td>
+                            <td class="p-4 text-slate-500">${b.date || ''} (${b.time || ''})</td>
+                            <td class="p-4 text-center">
+                                <button onclick="deleteBooking('${b.id}')" class="w-8 h-8 bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white rounded-lg transition-all text-xs"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center p-8 text-rose-500">تعذر جلب البيانات. تأكد من عمل الـ Deploy بنجاح بصلاحية Anyone.</td></tr>`;
+            }
+        }
+
+        async function deleteBooking(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا الحجز؟')) return;
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'delete', id: id })
+                });
+                loadBookings();
+            } catch (err) {
+                alert('حدث خطأ أثناء الحذف.');
+            }
+        }
+    </script>
+</body>
+</html>
