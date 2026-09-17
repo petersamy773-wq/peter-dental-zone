@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peter Dental Zone - حجز ميعاد العيادة</title>
+    <style>
+        :root {
+            --primary: #00897b;
+            --primary-dark: #004d40;
+            --accent: #27ae60;
+            --danger: #c0392b;
+            --bg-color: #f4f7f6;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .clinic-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0f2f1;
+            padding-bottom: 15px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            box-shadow: 0 4px 12px rgba(0,137,123,0.3);
+        }
+
+        .clinic-name {
+            color: var(--primary-dark);
+            font-size: 26px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .clinic-slogan {
+            color: var(--primary);
+            font-size: 14px;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button.action-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button.action-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        #summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e0f2f1;
+            border: 1px solid #80cbc4;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .printable-receipt {
+            background: #ffffff;
+            color: #2c3e50;
+            padding: 15px;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            direction: rtl;
+            text-align: right;
+        }
+
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            color: white;
+            text-align: center;
+            padding-top: 20vh;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loadingOverlay">جاري تأكيد الحجز وحفظه في النظام السحابي... ⏳</div>
+
+<div class="container">
+    <div class="clinic-header">
+        <div class="logo-icon">P</div>
+        <h1 class="clinic-name">Peter Dental Zone</h1>
+        <div class="clinic-slogan">احجز ميعادك بكل سهولة ويسر ✨</div>
+    </div>
+
+    <div class="form-group">
+        <label for="patientName">اسم المريض:</label>
+        <input type="text" id="patientName" placeholder="اكتب اسمك بالكامل">
+    </div>
+
+    <div class="form-group">
+        <label for="patientPhone">رقم الموبايل (11 رقم يبدأ بـ 01):</label>
+        <input type="tel" id="patientPhone" maxlength="11" placeholder="01xxxxxxxxx">
+    </div>
+
+    <div class="form-group">
+        <label for="serviceSelect">اختر الخدمة الطبية:</label>
+        <select id="serviceSelect">
+            <option value="" data-duration="0" data-price="0">-- اختر الخدمة --</option>
+            <option value="كشف واستشارة" data-duration="15" data-price="300">كشف واستشارة (15 دقيقة) - 300 جنيه</option>
+            <option value="حشو عصب" data-duration="60" data-price="1500">حشو عصب (60 دقيقة) - 1500 جنيه</option>
+            <option value="تبييض الأسنان" data-duration="45" data-price="2000">تبييض الأسنان (45 دقيقة) - 2000 جنيه</option>
+            <option value="تركيبات (طربوش/جسر)" data-duration="30" data-price="2500">تركيبات (طربوش/جسر) (30 دقيقة) - 2500 جنيه</option>
+            <option value="حشو تجميلي" data-duration="30" data-price="600">حشو تجميلي (30 دقيقة) - 600 جنيه</option>
+            <option value="خلع عادي" data-duration="20" data-price="400">خلع عادي (20 دقيقة) - 400 جنيه</option>
+            <option value="خلع جراحي" data-duration="45" data-price="1200">خلع جراحي لضرس العقل (45 دقيقة) - 1200 جنيه</option>
+            <option value="تنظيف جير وتلميع" data-duration="30" data-price="500">تنظيف جير وتلميع (30 دقيقة) - 500 جنيه</option>
+            <option value="علاج لثة وتنظيف عميق" data-duration="45" data-price="800">علاج لثة وتنظيف عميق (45 دقيقة) - 800 جنيه</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="bookingDate">تاريخ الحجز المطلوب:</label>
+        <input type="date" id="bookingDate">
+    </div>
+
+    <div class="form-group">
+        <label for="paymentRef">رقم إيصال التحويل (إنستاباي / فودافون كاش - اختياري):</label>
+        <input type="text" id="paymentRef" placeholder="اكتب رقم العملية لتأكيد الحجز أوتوماتيك">
+    </div>
+
+    <button class="action-btn" onclick="autoBookAppointment()">احصل على ميعادك الذكي</button>
+
+    <div id="summary"></div>
+</div>
+
+<script>
+    const CLOUD_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1z6umPCyTnu6egB14QKmWwLclBhY8YPCrcRqF6_Pm7mAcwHh8ZEOev6QA6TkO5E3Rog/exec";
+
+    window.onload = function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("bookingDate").setAttribute('min', today);
+        document.getElementById("bookingDate").value = today;
+    };
+
+    const formatTimeMinutes = (totalMins) => {
+        const h = Math.floor(totalMins / 60);
+        const m = totalMins % 60;
+        const period = h >= 12 ? 'مساءً' : 'ظهراً';
+        const formattedH = h > 12 ? h - 12 : h;
+        const formattedM = m < 10 ? '0' + m : m;
+        return `${formattedH}:${formattedM} ${period}`;
+    };
+
+    function autoBookAppointment() {
+        const name = document.getElementById('patientName').value.trim();
+        const phone = document.getElementById('patientPhone').value.trim();
+        const select = document.getElementById('serviceSelect');
+        const service = select.value;
+        const date = document.getElementById('bookingDate').value;
+        const paymentRef = document.getElementById('paymentRef').value.trim();
+
+        if (!name || !service || !date) {
+            alert('برجاء كتابة الاسم واختيار الخدمة وتاريخ الحجز!');
+            return;
+        }
+
+        const phoneRegex = /^01[0-9]{9}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('رقم الموبايل غير صحيح! يجب أن يكون 11 رقماً ويبدأ بـ 01');
+            return;
+        }
+
+        const duration = parseInt(select.options[select.selectedIndex].getAttribute('data-duration'));
+        const price = parseInt(select.options[select.selectedIndex].getAttribute('data-price'));
+        const deposit = price * 0.20; 
+
+        // لجلب الحجوزات الحالية من التخزين المؤقت أو سحبها لتوليد الميعاد
+        let existingBookings = JSON.parse(localStorage.getItem('pdz_bookings')) || [];
+        const dayBookings = existingBookings.filter(b => b.date === date).sort((a, b) => a.startMin - b.startMin);
+
+        const CLINIC_START = 14 * 60; 
+        const CLINIC_END = 22 * 60;   
+        const BUFFER = 10;            
+
+        let assignedStart = -1;
+        let assignedEnd = -1;
+
+        if (dayBookings.length === 0) {
+            assignedStart = CLINIC_START;
+            assignedEnd = CLINIC_START + duration;
+        } else {
+            let firstBooking = dayBookings[0];
+            if (firstBooking.startMin - CLINIC_START >= duration) {
+                assignedStart = CLINIC_START;
+                assignedEnd = CLINIC_START + duration;
+            } else {
+                for (let i = 0; i < dayBookings.length - 1; i++) {
+                    let currentEndWithBuffer = dayBookings[i].endMin + BUFFER;
+                    let nextStart = dayBookings[i + 1].startMin;
+                    
+                    if (nextStart - currentEndWithBuffer >= duration) {
+                        assignedStart = currentEndWithBuffer;
+                        assignedEnd = assignedStart + duration;
+                        break;
+                    }
+                }
+                if (assignedStart === -1) {
+                    let lastBooking = dayBookings[dayBookings.length - 1];
+                    let potentialStart = lastBooking.endMin + BUFFER;
+                    if (potentialStart + duration <= CLINIC_END) {
+                        assignedStart = potentialStart;
+                        assignedEnd = assignedStart + duration;
+                    }
+                }
+            }
+        }
+
+        if (assignedStart === -1 || assignedEnd > CLINIC_END) {
+            alert('عذراً، عيادة هذا اليوم مكتملة بالكامل، برجاء اختيار يوم آخر.');
+            return;
+        }
+
+        const assignedTimeStr = formatTimeMinutes(assignedStart);
+        const bookingCode = 'PDZ-' + Math.floor(1000 + Math.random() * 9000);
+        const isConfirmed = paymentRef.length > 0;
+
+        const newBooking = {
+            id: bookingCode,
+            name: name,
+            phone: phone,
+            service: service,
+            price: price,
+            date: date,
+            startMin: assignedStart,
+            endMin: assignedEnd,
+            time: assignedTimeStr,
+            deposit: deposit,
+            paymentRef: paymentRef ? paymentRef : 'لم يُسجل بعد',
+            status: isConfirmed ? 'confirmed' : 'pending',
+            medicalNotes: ''
+        };
+
+        document.getElementById('loadingOverlay').style.display = 'block';
+
+        fetch(CLOUD_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify(newBooking)
+        })
+        .then(() => {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            existingBookings.push(newBooking);
+            localStorage.setItem('pdz_bookings', JSON.stringify(existingBookings));
+
+            const queueNumber = dayBookings.length + 1;
+
+            const summaryDiv = document.getElementById('summary');
+            summaryDiv.style.display = 'block';
+            summaryDiv.innerHTML = `
+                <div class="printable-receipt">
+                    <div style="text-align: center; border-bottom: 2px solid #e0f2f1; padding-bottom: 10px; margin-bottom: 12px;">
+                        <h2 style="color: #004d40; margin: 0 0 5px 0;">Peter Dental Zone</h2>
+                        <p style="color: #00897b; margin: 0; font-size: 13px; font-weight: bold;">إيصال حجز ميعاد رسمي (سحابي) ✨</p>
+                    </div>
+                    <p><b>كود الحجز:</b> <span style="color: var(--primary); font-size: 18px; font-weight: bold;">#${bookingCode}</span></p>
+                    <p><b>المريض:</b> ${name} (${phone})</p>
+                    <p><b>الخدمة:</b> ${service} (${price} جنيه)</p>
+                    <p><b>تاريخ الحجز:</b> ${date}</p>
+                    <p><b>ميعاد البدء:</b> <span style="color: var(--danger); font-weight: bold; font-size: 17px;">${assignedTimeStr}</span></p>
+                    <p><b>العربون المطلوب (20%):</b> <span style="color: #d35400; font-weight: bold; font-size: 18px;">${deposit} جنيه</span></p>
+                    <p style="color: #c0392b; font-weight: bold; font-size: 13px; border-top: 1px dashed #b2dfdb; padding-top: 8px; margin-top: 10px;">⚠️ تنبيه هام: تم حفظ الحجز سحابياً بنجاح. برجاء أخذ لقطة شاشة (Screenshot) لهذا الإيصال والحضور قبل الميعاد بـ 10 دقائق.</p>
+                </div>
+            `;
+
+            document.getElementById('patientName').value = '';
+            document.getElementById('patientPhone').value = '';
+            document.getElementById('paymentRef').value = '';
+        })
+        .catch(err => {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            alert('حدث خطأ أثناء الاتصال بالسحابة، برجاء المحاولة مرة أخرى.');
+            console.error(err);
+        });
+    }
+</script>
+
+</body>
+</html>
