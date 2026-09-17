@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peter Dental Zone - النظام المتكامل الشامل</title>
+    <style>
+        :root {
+            --primary: #00897b;
+            --primary-dark: #004d40;
+            --accent: #27ae60;
+            --danger: #c0392b;
+            --warning: #f39c12;
+            --whatsapp: #25d366;
+            --bg-color: #f4f7f6;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .clinic-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0f2f1;
+            padding-bottom: 15px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            box-shadow: 0 4px 12px rgba(0,137,123,0.3);
+            border: 2px solid var(--white);
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s;
+        }
+
+        .logo-icon:active {
+            transform: scale(0.95);
+        }
+
+        .clinic-name {
+            color: var(--primary-dark);
+            font-size: 26px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .clinic-slogan {
+            color: var(--primary);
+            font-size: 14px;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        .section-view {
+            display: none;
+        }
+
+        .section-view.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button.action-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button.action-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        #summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e0f2f1;
+            border: 1px solid #80cbc4;
+            border-radius: 6px;
+            display: none;
+        }
+
+        #loginModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            text-align: right;
+        }
+
+        .financial-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            flex: 1;
+            background: #e0f2f1;
+            border: 1px solid #80cbc4;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-card h4 { margin: 0 0 5px 0; color: var(--primary-dark); font-size: 14px; }
+        .stat-card span { font-size: 20px; font-weight: bold; color: var(--primary); }
+
+        .dashboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .dashboard-table th, .dashboard-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .dashboard-table th {
+            background-color: var(--primary-dark);
+            color: var(--white);
+        }
+
+        .dashboard-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .btn-confirm { background: var(--accent); color: var(--white); border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; margin-bottom: 3px;}
+        .btn-delete { background: var(--danger); color: var(--white); border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; }
+        .btn-whatsapp { background: var(--whatsapp); color: var(--white); border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; margin-bottom: 3px;}
+        .btn-print { background: #3498db; color: var(--white); border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; margin-bottom: 3px;}
+
+        .status-badge { padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
+        .status-pending { background: var(--warning); color: var(--white); }
+        .status-confirmed { background: var(--accent); color: var(--white); }
+        .queue-badge { background: var(--primary-dark); color: white; padding: 3px 8px; border-radius: 50%; font-weight: bold; }
+        
+        .loader {
+            text-align: center;
+            padding: 20px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="clinic-header">
+        <!-- زر الأدمين المخفي داخل حرف الـ P (اضغط عليه 3 مرات متتالية) -->
+        <div class="logo-icon" id="adminSecretBtn" title="Peter Dental Zone">P</div>
+        <h1 class="clinic-name">Peter Dental Zone</h1>
+        <div class="clinic-slogan">مساحتك الخاصة لابتسامة مثالية ✨</div>
+    </div>
+
+    <!-- نافذة تسجيل الدخول للإدارة -->
+    <div id="loginModal">
+        <div class="login-box">
+            <h3 style="color: var(--primary-dark); margin-top:0; text-align:center;">لوحة تحكم الطبيب 🩺</h3>
+            <div class="form-group">
+                <label>البريد الإلكتروني:</label>
+                <input type="email" id="adminEmail" placeholder="petersamy773@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور:</label>
+                <input type="password" id="adminPassword" placeholder="********">
+            </div>
+            <button class="action-btn" onclick="verifyAdminLogin()">دخول آمن (مع تنبيه بريدي)</button>
+            <button onclick="closeLoginModal()" style="background:#7f8c8d; color:white; border:none; padding:8px; width:100%; border-radius:6px; margin-top:5px; cursor:pointer;">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- واجهة حجز المريض -->
+    <div id="bookingSection" class="section-view active">
+        <div class="form-group">
+            <label for="patientName">اسم المريض:</label>
+            <input type="text" id="patientName" placeholder="اكتب اسمك بالكامل">
+        </div>
+
+        <div class="form-group">
+            <label for="patientPhone">رقم الموبايل (11 رقم يبدأ بـ 01):</label>
+            <input type="tel" id="patientPhone" maxlength="11" placeholder="01xxxxxxxxx">
+        </div>
+
+        <div class="form-group">
+            <label for="serviceSelect">اختر الخدمة الطبية:</label>
+            <select id="serviceSelect">
+                <option value="" data-duration="0" data-price="0">-- اختر الخدمة --</option>
+                <option value="كشف واستشارة" data-duration="15" data-price="300">كشف واستشارة (15 دقيقة) - 300 جنيه</option>
+                <option value="حشو عصب" data-duration="60" data-price="1500">حشو عصب (60 دقيقة) - 1500 جنيه</option>
+                <option value="تبييض الأسنان" data-duration="45" data-price="2000">تبييض الأسنان (45 دقيقة) - 2000 جنيه</option>
+                <option value="تركيبات (طربوش/جسر)" data-duration="30" data-price="2500">تركيبات (طربوش/جسر) (30 دقيقة) - 2500 جنيه</option>
+                <option value="حشو تجميلي" data-duration="30" data-price="600">حشو تجميلي (30 دقيقة) - 600 جنيه</option>
+                <option value="خلع عادي" data-duration="20" data-price="400">خلع عادي (20 دقيقة) - 400 جنيه</option>
+                <option value="خلع جراحي" data-duration="45" data-price="1200">خلع جراحي لضرس العقل (45 دقيقة) - 1200 جنيه</option>
+                <option value="تنظيف جير وتلميع" data-duration="30" data-price="500">تنظيف جير وتلميع (30 دقيقة) - 500 جنيه</option>
+                <option value="علاج لثة وتنظيف عميق" data-duration="45" data-price="800">علاج لثة وتنظيف عميق (45 دقيقة) - 800 جنيه</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="bookingDate">تاريخ الحجز المطلوب:</label>
+            <input type="date" id="bookingDate">
+        </div>
+
+        <div class="form-group">
+            <label for="paymentRef">رقم إيصال التحويل (إنستاباي / فودافون كاش - اختياري):</label>
+            <input type="text" id="paymentRef" placeholder="اكتب رقم العملية لتأكيد الحجز أوتوماتيك">
+        </div>
+
+        <button class="action-btn" onclick="autoBookAppointment()">احصل على ميعادك الذكي وتأكيد فوري</button>
+
+        <div id="summary"></div>
+    </div>
+
+    <!-- لوحة تحكم الطبيب -->
+    <div id="dashboardSection" class="section-view">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <h3 style="color: var(--primary-dark); margin: 0;">لوحة تحكم وإدارة عيادة Peter Dental Zone</h3>
+            <div>
+                <button onclick="testConnection()" style="background: #2980b9; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-left: 5px;">اختبار الاتصال بالشيت 🔍</button>
+                <button onclick="fetchBookingsFromSheet()" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin-left: 5px;">تحديث البيانات 🔄</button>
+                <button onclick="switchTab('booking')" style="background: #7f8c8d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer;">العودة للحجز 🔙</button>
+            </div>
+        </div>
+        
+        <div class="financial-box">
+            <div class="stat-card">
+                <h4>إجمالي العربونات المحصلة</h4>
+                <span id="totalDepositBox">0 جنيه</span>
+            </div>
+            <div class="stat-card">
+                <h4>إجمالي الإيرادات المتوقعة</h4>
+                <span id="totalRevenueBox">0 جنيه</span>
+            </div>
+            <div class="stat-card">
+                <h4>إجمالي الحجوزات المسجلة</h4>
+                <span id="totalCountBox">0</span>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>الدور</th>
+                        <th>الكود</th>
+                        <th>المريض</th>
+                        <th>الموبايل</th>
+                        <th>الخدمة / السعر</th>
+                        <th>الميعاد</th>
+                        <th>العربون / الإيصال</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات والواتساب</th>
+                    </tr>
+                </thead>
+                <tbody id="appointmentsTableBody">
+                    <tr><td colspan="9" class="loader">جاري تحميل البيانات من الشيت...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // رابط الـ Web App المربوط مباشرة بشيت PDZ الخاص بك
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwM_w1fr1k7-D1_Q4_-D7dDqPnK5Z3BVBNtGH4OICvBEGKWJbNdQjTkAngU649rt0OZvQ/exec";
+
+    let allBookingsList = [];
+
+    window.onload = function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("bookingDate").setAttribute('min', today);
+        document.getElementById("bookingDate").value = today;
+
+        fetchBookingsFromSheet();
+
+        let clickCount = 0;
+        let clickTimer = null;
+        const logoP = document.getElementById('adminSecretBtn');
+        
+        logoP.addEventListener('click', function() {
+            clickCount++;
+            if (clickCount === 1) {
+                clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+            } else if (clickCount === 3) {
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                
+                if (sessionStorage.getItem('pdz_logged_in') === 'true') {
+                    switchTab('dashboard');
+                } else {
+                    document.getElementById('loginModal').style.display = 'flex';
+                }
+            }
+        });
+    };
+
+    function closeLoginModal() {
+        document.getElementById('loginModal').style.display = 'none';
+    }
+
+    function verifyAdminLogin() {
+        const email = document.getElementById('adminEmail').value.trim();
+        const password = document.getElementById('adminPassword').value.trim();
+
+        if(!email || !password) {
+            alert('برجاء كتابة البريد وكلمة المرور!');
+            return;
+        }
+
+        let formData = new URLSearchParams();
+        formData.append('action', 'login');
+        formData.append('email', email);
+        formData.append('password', password);
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.status === 'success') {
+                sessionStorage.setItem('pdz_logged_in', 'true');
+                closeLoginModal();
+                document.getElementById('adminEmail').value = '';
+                document.getElementById('adminPassword').value = '';
+                switchTab('dashboard');
+            } else {
+                alert('البريد الإلكتروني أو كلمة المرور غير صحيحة!');
+            }
+        })
+        .catch(err => {
+            if (email.toLowerCase() === "petersamy773@gmail.com" && password === "P3534Sam6@Lab8b1985") {
+                sessionStorage.setItem('pdz_logged_in', 'true');
+                closeLoginModal();
+                switchTab('dashboard');
+            } else {
+                alert('خطأ في الاتصال بالسيرفر أو البيانات غير صحيحة.');
+            }
+        });
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+        if (tabName === 'booking') {
+            document.getElementById('bookingSection').classList.add('active');
+        } else {
+            document.getElementById('dashboardSection').classList.add('active');
+            fetchBookingsFromSheet();
+        }
+    }
+
+    function testConnection() {
+        alert('جاري اختبار الاتصال بالشيت...');
+        fetch(SCRIPT_URL)
+            .then(res => res.json())
+            .then(data => {
+                alert('الاتصال ناجح 100%! تم جلب عدد ' + (Array.isArray(data) ? data.length : 0) + ' حجوزات من شيت PDZ.');
+                console.log(data);
+            })
+            .catch(err => {
+                alert('فشل الاتصال! تأكد من منح الصلاحيات عبر فتح رابط الـ exec في المتصفح مرة واحدة.');
+                console.error(err);
+            });
+    }
+
+    function fetchBookingsFromSheet() {
+        const tbody = document.getElementById('appointmentsTableBody');
+        tbody.innerHTML = `<tr><td colspan="9" class="loader">جاري جلب أحدث الحجوزات من الشيت...</td></tr>`;
+
+        fetch(SCRIPT_URL)
+            .then(res => res.json())
+            .then(data => {
+                allBookingsList = Array.isArray(data) ? data : [];
+                renderDashboardTable();
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="9" style="color: red; padding: 15px;">تعذر جلب البيانات من الشيت. تأكد من الاتصال بالإنترنت.</td></tr>`;
+            });
+    }
+
+    function sendBookingToServer(bookingData, callback) {
+        let formData = new URLSearchParams();
+        for (let key in bookingData) {
+            formData.append(key, bookingData[key]);
+        }
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(res => {
+            if(callback) callback();
+        })
+        .catch(err => {
+            console.error(err);
+            if(callback) callback();
+        });
+    }
+
+    function autoBookAppointment() {
+        const name = document.getElementById('patientName').value.trim();
+        const phone = document.getElementById('patientPhone').value.trim();
+        const select = document.getElementById('serviceSelect');
+        const service = select.value;
+        const date = document.getElementById('bookingDate').value;
+        const paymentRef = document.getElementById('paymentRef').value.trim();
+
+        if (!name || !service || !date) {
+            alert('برجاء كتابة الاسم واختيار الخدمة وتاريخ الحجز!');
+            return;
+        }
+
+        const phoneRegex = /^01[0-9]{9}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('رقم الموبايل غير صحيح! يجب أن يكون 11 رقماً ويبدأ بـ 01');
+            return;
+        }
+
+        const duration = parseInt(select.options[select.selectedIndex].getAttribute('data-duration'));
+        const price = parseInt(select.options[select.selectedIndex].getAttribute('data-price'));
+        const deposit = price * 0.20; 
+
+        const dayBookings = allBookingsList
+            .filter(b => b.date === date)
+            .sort((a, b) => Number(a.startMin) - Number(b.startMin));
+
+        const CLINIC_START = 14 * 60; 
+        const CLINIC_END = 22 * 60;   
+        const BUFFER = 10;            
+
+        let assignedStart = -1;
+        let assignedEnd = -1;
+
+        if (dayBookings.length === 0) {
+            assignedStart = CLINIC_START;
+            assignedEnd = CLINIC_START + duration;
+        } else {
+            let firstBooking = dayBookings[0];
+            if (Number(firstBooking.startMin) - CLINIC_START >= duration) {
+                assignedStart = CLINIC_START;
+                assignedEnd = CLINIC_START + duration;
+            } else {
+                for (let i = 0; i < dayBookings.length - 1; i++) {
+                    let currentEndWithBuffer = Number(dayBookings[i].endMin) + BUFFER;
+                    let nextStart = Number(dayBookings[i + 1].startMin);
+                    
+                    if (nextStart - currentEndWithBuffer >= duration) {
+                        assignedStart = currentEndWithBuffer;
+                        assignedEnd = assignedStart + duration;
+                        break;
+                    }
+                }
+
+                if (assignedStart === -1) {
+                    let lastBooking = dayBookings[dayBookings.length - 1];
+                    let potentialStart = Number(lastBooking.endMin) + BUFFER;
+                    
+                    if (potentialStart + duration <= CLINIC_END) {
+                        assignedStart = potentialStart;
+                        assignedEnd = assignedStart + duration;
+                    }
+                }
+            }
+        }
+
+        if (assignedStart === -1 || assignedEnd > CLINIC_END) {
+            alert('عذراً، عيادة هذا اليوم مكتملة بالكامل أو لا توجد فترة زمنية متصلة تكفي مدة هذه الخدمة، برجاء اختيار يوم آخر.');
+            return;
+        }
+
+        const formatTimeMinutes = (totalMins) => {
+            const h = Math.floor(totalMins / 60);
+            const m = totalMins % 60;
+            const period = h >= 12 ? 'مساءً' : 'ظهراً';
+            const formattedH = h > 12 ? h - 12 : h;
+            const formattedM = m < 10 ? '0' + m : m;
+            return `${formattedH}:${formattedM} ${period}`;
+        };
+
+        const assignedTimeStr = formatTimeMinutes(assignedStart);
+        const bookingCode = 'PDZ-' + Math.floor(1000 + Math.random() * 9000);
+        const isConfirmed = paymentRef.length > 0;
+
+        const newBooking = {
+            id: bookingCode,
+            name: name,
+            phone: phone,
+            service: service,
+            price: price,
+            date: date,
+            startMin: assignedStart,
+            time: assignedTimeStr,
+            deposit: deposit,
+            paymentRef: paymentRef ? paymentRef : 'لم يُسجل بعد',
+            status: isConfirmed ? 'confirmed' : 'pending'
+        };
+
+        sendBookingToServer(newBooking, () => {
+            allBookingsList.push(newBooking);
+            renderDashboardTable();
+        });
+
+        const summaryDiv = document.getElementById('summary');
+        summaryDiv.style.display = 'block';
+        summaryDiv.innerHTML = `
+            <h3 style="color: var(--primary-dark); margin-top:0;">مرحباً بك في Peter Dental Zone</h3>
+            <p><b>كود الحجز:</b> <span style="color: var(--primary); font-size: 18px; font-weight: bold;">#${bookingCode}</span></p>
+            <p><b>المريض:</b> ${name} (${phone})</p>
+            <p><b>الخدمة:</b> ${service} (${price} جنيه)</p>
+            <p><b>تاريخ الحجز:</b> ${date}</p>
+            <p><b>ميعاد الجلسة:</b> <span style="color: var(--danger); font-weight: bold; font-size: 17px;">${assignedTimeStr}</span></p>
+            <hr>
+            <p><b>العربون المطلوب (20%):</b> <span style="color: #d35400; font-weight: bold; font-size: 18px;">${deposit} جنيه</span></p>
+            <button class="action-btn" style="background:#3498db; margin-top:5px;" onclick="printReceipt('${bookingCode}')">طباعة إيصال الحجز 🖨️</button>
+        `;
+
+        document.getElementById('patientName').value = '';
+        document.getElementById('patientPhone').value = '';
+        document.getElementById('paymentRef').value = '';
+    }
+
+    function renderDashboardTable() {
+        const tbody = document.getElementById('appointmentsTableBody');
+        
+        let totalDeposit = 0;
+        let totalRevenue = 0;
+
+        if (allBookingsList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="9" style="color: #777; padding: 15px;">لا توجد حجوزات مسجلة في الشيت حالياً.</td></tr>`;
+            document.getElementById('totalDepositBox').innerText = '0 جنيه';
+            document.getElementById('totalRevenueBox').innerText = '0 جنيه';
+            document.getElementById('totalCountBox').innerText = '0';
+            return;
+        }
+
+        let sortedList = [...allBookingsList].sort((a, b) => {
+            if (a.date !== b.date) return a.date.localeCompare(b.date);
+            return Number(a.startMin) - Number(b.startMin);
+        });
+
+        let html = '';
+        let currentDayTracker = '';
+        let queueCounter = 1;
+
+        sortedList.forEach((b) => {
+            if (currentDayTracker !== b.date) {
+                currentDayTracker = b.date;
+                queueCounter = 1;
+            }
+
+            if(b.status === 'confirmed') {
+                totalDeposit += Number(b.deposit || 0);
+            }
+            totalRevenue += Number(b.price || 0);
+
+            const statusBadge = b.status === 'confirmed' 
+                ? `<span class="status-badge status-confirmed">مؤكد ✅</span>` 
+                : `<span class="status-badge status-pending">انتظار ⏳</span>`;
+            
+            const confirmBtnText = b.status === 'confirmed' ? 'إلغاء التأكيد' : 'تأكيد';
+
+            let cleanPhone = String(b.phone).startsWith('0') ? '2' + b.phone : b.phone;
+            let waMsg = encodeURIComponent(`مرحباً يا ${b.name}، تم تأكيد حجزك في عيادة Peter Dental Zone برقم كود (#${b.id}) في تاريخ ${b.date} الساعة ${b.time}. ننتظر زيارتك! ✨`);
+            let waLink = `https://wa.me/${cleanPhone}?text=${waMsg}`;
+
+            html += `
+                <tr>
+                    <td><span class="queue-badge">${queueCounter}</span><br><small>${b.date}</small></td>
+                    <td><b>#${b.id}</b></td>
+                    <td>${b.name}</td>
+                    <td>${b.phone}</td>
+                    <td>${b.service}<br><b>${b.price} جـ</b></td>
+                    <td><b>${b.time}</b></td>
+                    <td><b>${b.deposit} جـ</b><br><small>إيصال: ${b.paymentRef}</small></td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <button class="btn-confirm" onclick="toggleConfirm('${b.id}')">${confirmBtnText}</button>
+                        <a href="${waLink}" target="_blank" class="btn-whatsapp">واتساب 💬</a>
+                        <button class="btn-print" onclick="printReceipt('${b.id}')">طباعة 🖨️</button>
+                        <button class="btn-delete" onclick="deleteBooking('${b.id}')">حذف</button>
+                    </td>
+                </tr>
+            `;
+
+            queueCounter++;
+        });
+
+        tbody.innerHTML = html;
+        document.getElementById('totalDepositBox').innerText = totalDeposit + ' جنيه';
+        document.getElementById('totalRevenueBox').innerText = totalRevenue + ' جنيه';
+        document.getElementById('totalCountBox').innerText = allBookingsList.length;
+    }
+
+    function toggleConfirm(id) {
+        const booking = allBookingsList.find(b => String(b.id) === String(id));
+        if (booking) {
+            booking.status = booking.status === 'confirmed' ? 'pending' : 'confirmed';
+            sendBookingToServer(booking, () => {
+                renderDashboardTable();
+            });
+        }
+    }
+
+    function deleteBooking(id) {
+        if (confirm('هل أنت متأكد من حذف هذا الحجز نهائياً من الشيت؟')) {
+            let formData = new URLSearchParams();
+            formData.append('action', 'delete');
+            formData.append('id', id);
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            }).then(() => {
+                allBookingsList = allBookingsList.filter(b => String(b.id) !== String(id));
+                renderDashboardTable();
+            });
+        }
+    }
+
+    function printReceipt(id) {
+        const booking = allBookingsList.find(b => String(b.id) === String(id));
+        if (!booking) return;
+
+        let printWindow = window.open('', '_blank', 'width=400,height=600');
+        printWindow.document.write(`
+            <html dir="rtl">
+            <head>
+                <title>إيصال حجز - Peter Dental Zone</title>
+                <style>
+                    body { font-family: Tahoma, sans-serif; padding: 20px; text-align: center; }
+                    h2 { color: #004d40; margin-bottom: 5px; }
+                    .receipt-box { border: 2px dashed #00897b; padding: 15px; border-radius: 8px; text-align: right; margin-top: 15px; }
+                    .footer { margin-top: 20px; font-size: 12px; color: #555; }
+                </style>
+            </head>
+            <body>
+                <h2>Peter Dental Zone</h2>
+                <div style="font-size: 12px; color: #00897b;">مساحتك الخاصة لابتسامة مثالية ✨</div>
+                ->
+                <div class="receipt-box">
+                    <p><b>كود الحجز:</b> #${booking.id}</p>
+                    <p><b>اسم المريض:</b> ${booking.name}</p>
+                    <p><b>رقم الموبايل:</b> ${booking.phone}</p>
+                    <p><b>الخدمة الطبية:</b> ${booking.service}</p>
+                    <p><b>تكلفة الخدمة:</b> ${booking.price} جنيه</p>
+                    <p><b>تاريخ الحجز:</b> ${booking.date}</p>
+                    <p><b>ميعاد الجلسة:</b> ${booking.time}</p>
+                    <p><b>العربون المطلوب:</b> ${booking.deposit} جنيه</p>
+                    <p><b>حالة التأكيد:</b> ${booking.status === 'confirmed' ? 'مؤكد ✅' : 'قيد الانتظار ⏳'}</p>
+                </div>
+                <div class="footer">شكراً لاختيارك عيادتنا. برجاء الحضور قبل الميعاد بـ 10 دقائق.</div>
+                <script>window.print();<\/script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+    }
+</script>
+
+</body>
+</html>
