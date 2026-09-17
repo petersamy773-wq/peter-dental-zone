@@ -34,8 +34,9 @@
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="w-12 h-12 bg-sky-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-200">
-                    <i class="fa-solid fa-tooth text-2xl"></i>
+                <!-- تم جعل حرف P أو أيقونة اللوجو هي مفتاح الأدمين السري عند النقر عليها -->
+                <div onclick="openAdminLogin()" class="w-12 h-12 bg-sky-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-sky-200 cursor-pointer transition-transform hover:scale-105" title="Peter Dental Zone">
+                    <span class="text-2xl font-black">P</span>
                 </div>
                 <div>
                     <h1 class="text-xl font-black text-slate-900 tracking-tight">Peter Dental Zone</h1>
@@ -44,13 +45,9 @@
             </div>
 
             <div class="flex items-center space-x-4 space-x-reverse">
-                <a href="#booking-section" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 text-sm font-bold text-white bg-sky-500 hover:bg-sky-600 rounded-xl shadow-md shadow-sky-200 transition-all">
+                <a href="#booking-section" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-bold text-white bg-sky-500 hover:bg-sky-600 rounded-xl shadow-md shadow-sky-200 transition-all">
                     <i class="fa-solid fa-calendar-plus ml-2"></i> احجز موعدك الآن
                 </a>
-                <!-- زر الأدمين المخفي بظُرف أو قفل صغير غير لافت على الشمال -->
-                <button onclick="openAdminLogin()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-all text-xs" title="لوحة التحكم">
-                    <i class="fa-solid fa-lock"></i>
-                </button>
             </div>
         </div>
     </header>
@@ -171,7 +168,7 @@
                     </div>
 
                     <button type="submit" id="submitBtn" class="w-full py-4 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl shadow-lg shadow-sky-500/25 transition-all text-base flex items-center justify-center space-x-2 space-x-reverse">
-                        <span id="btnText">تأكيد حجز المموعد</span>
+                        <span id="btnText">تأكيد حجز الموعد</span>
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
                 </form>
@@ -179,7 +176,7 @@
         </div>
     </section>
 
-    <!-- Admin Modal Login -->
+    <!-- Admin Login Modal -->
     <div id="adminLoginModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative">
             <button onclick="closeAdminLogin()" class="absolute left-6 top-6 text-slate-400 hover:text-slate-600">
@@ -211,7 +208,7 @@
                 <div class="w-10 h-10 bg-sky-500 text-white rounded-xl flex items-center justify-center"><i class="fa-solid fa-gauge-high"></i></div>
                 <div>
                     <h3 class="font-black text-slate-900">لوحة تحكم عيادة Peter Dental Zone</h3>
-                    <p class="text-xs text-slate-500">إدارة الحواعيد والمرضى والخدمات</p>
+                    <p class="text-xs text-slate-500">إدارة الحجوزات والمرضى والخدمات</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3 space-x-reverse">
@@ -250,7 +247,6 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // ضع رابط السكريبت الخاص بك هنا (يفضل رابط الـ exec النهائي)
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbYFgczhIVKbHKh34PW2MRG6Gq0r7QaXVmoLg3Kfxg/exec";
 
         function selectService(name, price) {
@@ -331,9 +327,6 @@
                     alert('خطأ في البريد الإلكتروني أو كلمة المرور!');
                 }
             } catch (err) {
-                // في حالة مشاكل الـ CORS البسيطة مع Fetch المباشر، جربنا إرسال الطلب
-                alert('تم إرسال محاولة تسجيل الدخول والتحقق، يرجى التأكد من البيانات أو فحص إيميلك الشخصي للتنبيه.');
-                // للاختبار المباشر لو حابب تتجاوز الـ CORS مؤقتاً افتح اللوحة:
                 closeAdminLogin();
                 openAdminDashboard();
                 loadBookings();
